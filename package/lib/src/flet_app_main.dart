@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter/gestures.dart';
 
 import 'controls/create_control.dart';
 import 'flet_app_services.dart';
@@ -24,24 +25,18 @@ class FletAppMain extends StatelessWidget {
         builder: (context, viewModel) {
           if (viewModel.error != "" && !viewModel.isLoading) {
             return MaterialApp(
-                title: title,
-                home: Scaffold(
-                  body: Container(
-                      padding: const EdgeInsets.all(30),
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.error,
-                              color: Colors.redAccent, size: 30),
-                          const SizedBox(height: 8),
-                          Flexible(
-                              child: Text(viewModel.error,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(color: Colors.red)))
-                        ],
-                      )),
-                ));
+              title: title,
+              home: Scaffold(
+                body: Container(
+                    padding: const EdgeInsets.all(30),
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [const Icon(Icons.error, color: Colors.redAccent, size: 30), const SizedBox(height: 8), Flexible(child: Text(viewModel.error, textAlign: TextAlign.center, style: const TextStyle(color: Colors.red)))],
+                    )),
+              ),
+              scrollBehavior: DragScrollBehavior(),
+            );
           } else {
             return createControl(null, "page", false);
           }
@@ -49,4 +44,14 @@ class FletAppMain extends StatelessWidget {
       ),
     );
   }
+}
+
+class DragScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.stylus,
+        PointerDeviceKind.unknown,
+      };
 }
